@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Homework - Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            padding: 15px;
+            text-align: center;
+            color: white;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+        }
+
+        .form-section input, .form-section textarea, .form-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-section button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .form-section button:hover {
+            background-color: #45a049;
+        }
+
+        .monster {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+
+        .monster .fight-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .monster .fight-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .progress {
+            font-size: 18px;
+            color: #f39c12;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .blob {
+            background-color: #8e44ad;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .time-remaining {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Student Homework Game</h1>
+</header>
+
+<div class="container">
+    <div class="form-section">
+        <h3>Quiz Question</h3>
+        <p id="quiz-question">Question goes here</p>
+        <input type="text" id="quiz-answer" placeholder="Enter your answer" />
+        <button onclick="submitQuizAnswer()">Submit Answer</button>
+        <div id="quiz-result" class="message"></div>
+    </div>
+
+    <div class="form-section">
+        <h3>Writing Prompt</h3>
+        <p id="writing-prompt">Prompt goes here</p>
+        <textarea id="writing-answer" rows="4" placeholder="Write your answer here"></textarea>
+        <button onclick="startWritingTimer()">Start Writing</button>
+        <div id="writing-timer" class="progress"></div>
+        <div id="writing-result" class="message"></div>
+    </div>
+
+    <div class="monster">
+        <p>Defeat the monster by answering questions correctly or writing enough!</p>
+        <button class="fight-btn" onclick="fightMonster()">Fight Monster</button>
+    </div>
+
+    <div id="blob" class="blob" style="display:none;">Blob Collected!</div>
+</div>
+
+<script>
+    // Example questions (in real use case, these will be fetched dynamically)
+    const quizQuestion = "What is 2 + 2?";
+    const quizAnswer = "4";
+    const writingPrompt = "Write at least 100 words about your favorite animal.";
+    const wordLimit = 100;  // Number of words for writing prompt
+    const timeLimit = 5;    // Time in minutes
+
+    // Timer variables
+    let writingTimeRemaining = timeLimit * 60;  // Time in seconds
+    let writingTimerInterval;
+
+    // Predefined list of valid words (for demo purposes, a small list is used)
+    const validWords = new Set([
+        "dog", "cat", "animal", "favorite", "school", "book", "apple", "banana", "fish", "bird", "happy", "sad"
+    ]);
+
+    // Display initial quiz question and writing prompt
+    document.getElementById("quiz-question").innerText = quizQuestion;
+    document.getElementById("writing-prompt").innerText = writingPrompt;
+
+    // Function to submit quiz answer
+    function submitQuizAnswer() {
+        const studentAnswer = document.getElementById("quiz-answer").value;
+        const resultDiv = document.getElementById("quiz-result");
+
+        if (studentAnswer === quizAnswer) {
+            resultDiv.innerHTML = "Correct! You've defeated the monster!";
+            collectBlob();
+        } else {
+            resultDiv.innerHTML = "Incorrect. Try again!";
+        }
+    }
+
+    // Function to start writing timer
+    function startWritingTimer() {
+        const timerDiv = document.getElementById("writing-timer");
+        const writingAnswer = document.getElementById("writing-answer").value;
+        const resultDiv = document.getElementById("writing-result");
+
+        if (writingAnswer.length >= wordLimit) {
+            clearInterval(writingTimerInterval);  // Stop the timer if answer is already enough
+            resultDiv.innerHTML = "You have written enough words!";
+            collectBlob();
+        } else {
+            resultDiv.innerHTML = "Start writing!";
+            writingTimerInterval = setInterval(function() {
+                writingTimeRemaining--;
+                updateWritingTimer(timerDiv);
+                if (writingTimeRemaining <= 0) {
+                    clearInterval(writingTimerInterval);
+                    resultDiv.innerHTML = "Time's up! Try again next time.";
+                }
+            }, 1000);
+        }
+    }
+
+    // Function to update writing timer
+    function updateWritingTimer(timerDiv) {
+        const minutes = Math.floor(writingTimeRemaining / 60);
+        const seconds = writingTimeRemaining % 60;
+        timerDiv.innerHTML = `Time remaining: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    }
+
+    // Function to collect a blob after defeating a monster
+    function collectBlob() {
+        document.getElementById("blob").style.display = "inline-block";
+    }
+
+    // Function to check if the writing answer meets the word limit (valid words only)
+    function countValidWords() {
+        const writingAnswer = document.getElementById("writing-answer").value;
+        const words = writingAnswer.split(/\s+/);  // Split by whitespace
+
+        let validWordCount = 0;
+        for (let word of words) {
+            word = word.toLowerCase().replace(/[^a-z]/g, "");  // Clean up punctuation
+            if (validWords.has(word) && word.length > 0) {
+                validWordCount++;
+            }
+        }
+
+        return validWordCount;
+    }
+
+    // Function to handle the writing prompt validation
+    function checkWriting() {
+        const validWordCount = countValidWords();
+        const resultDiv = document.getElementById("writing-result");
+
+        if (validWordCount >= wordLimit) {
+            resultDiv.innerHTML = `You have written ${validWordCount} valid words! Well done!`;
+            collectBlob();
+        } else {
+            resultDiv.innerHTML = `You need to write at least ${wordLimit} valid words. You have ${validWordCount} so far.`;
+        }
+    }
+
+    // Function to simulate monster fight
+    function fightMonster() {
+        alert("You are fighting the monster! Answer questions or write to defeat it.");
+    }
+
+</script>
+
+</body>
+</html>
