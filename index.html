@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Homework Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            padding: 15px;
+            text-align: center;
+            color: white;
+        }
+
+        .container {
+            margin: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .container button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Login to Homework Game</h1>
+</header>
+
+<div class="container">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Enter your email" required />
+    <input type="password" id="password" placeholder="Enter your password" required />
+    <button onclick="login()">Login</button>
+    <p id="error" class="error"></p>
+</div>
+
+<script>
+    // Mock data for users (In production, this should be stored in a secure database)
+    const users = [
+        { email: "teacher@example.com", password: "teacher123", role: "teacher" },
+        { email: "student@example.com", password: "student123", role: "student" }
+    ];
+
+    // Function to handle login
+    function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const errorDiv = document.getElementById("error");
+
+        // Find the user based on email and password
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+            // Store user role in localStorage for access control
+            localStorage.setItem("role", user.role);
+            // Redirect to the appropriate page based on the user's role
+            if (user.role === "teacher") {
+                window.location.href = window.location.href + "/teacherPage.html";  // Redirect to the teacher's page
+            } else {
+                window.location.href = window.location.href + "/studentPage.html";  // Redirect to the student's page
+            }
+        } else {
+            errorDiv.innerHTML = "Invalid email or password.";
+        }
+    }
+</script>
+
+</body>
+</html>
