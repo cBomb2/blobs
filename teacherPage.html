@@ -1,0 +1,175 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Setup - Teacher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            padding: 15px;
+            text-align: center;
+            color: white;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+        }
+
+        .form-section input, .form-section textarea, .form-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-section button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .form-section button:hover {
+            background-color: #45a049;
+        }
+
+        .question-list {
+            margin-top: 20px;
+        }
+
+        .question-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .question-list li {
+            background-color: #e7f7e1;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .question-list li span {
+            font-weight: bold;
+        }
+
+        .question-list li .remove-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .question-list li .remove-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Teacher Homework Setup</h1>
+</header>
+
+<div class="container">
+    <div class="form-section">
+        <h3>Add Quiz Style Question</h3>
+        <label for="quiz-question">Question</label>
+        <input type="text" id="quiz-question" placeholder="Enter your quiz question" required>
+
+        <label for="quiz-answer">Correct Answer</label>
+        <input type="text" id="quiz-answer" placeholder="Enter the correct answer" required>
+
+        <button onclick="addQuizQuestion()">Add Quiz Question</button>
+    </div>
+
+    <div class="form-section">
+        <h3>Add Writing Prompt</h3>
+        <label for="writing-prompt">Prompt</label>
+        <textarea id="writing-prompt" rows="4" placeholder="Enter your writing prompt" required></textarea>
+
+        <label for="word-limit">Word Count Limit</label>
+        <input type="number" id="word-limit" placeholder="Enter the minimum word count" required>
+
+        <label for="time-limit">Time Limit (minutes)</label>
+        <input type="number" id="time-limit" placeholder="Enter the time limit in minutes" required>
+
+        <button onclick="addWritingPrompt()">Add Writing Prompt</button>
+    </div>
+
+    <div class="question-list">
+        <h3>Questions Added</h3>
+        <ul id="question-list">
+            <!-- Questions will appear here -->
+        </ul>
+    </div>
+</div>
+
+<script>
+    const questionList = document.getElementById("question-list");
+
+    // Function to add quiz question
+    function addQuizQuestion() {
+        const questionText = document.getElementById("quiz-question").value;
+        const correctAnswer = document.getElementById("quiz-answer").value;
+
+        if (questionText && correctAnswer) {
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `<span>Quiz Question:</span> ${questionText} <br><span>Answer:</span> ${correctAnswer} 
+                <button class="remove-btn" onclick="removeQuestion(this)">Remove</button>`;
+            questionList.appendChild(listItem);
+        } else {
+            alert("Please fill in both question and answer.");
+        }
+    }
+
+    // Function to add writing prompt
+    function addWritingPrompt() {
+        const promptText = document.getElementById("writing-prompt").value;
+        const wordLimit = document.getElementById("word-limit").value;
+        const timeLimit = document.getElementById("time-limit").value;
+
+        if (promptText && wordLimit && timeLimit) {
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `<span>Writing Prompt:</span> ${promptText} <br><span>Word Limit:</span> ${wordLimit} words <br><span>Time Limit:</span> ${timeLimit} minutes
+                <button class="remove-btn" onclick="removeQuestion(this)">Remove</button>`;
+            questionList.appendChild(listItem);
+        } else {
+            alert("Please fill in the prompt, word limit, and time limit.");
+        }
+    }
+
+    // Function to remove a question
+    function removeQuestion(button) {
+        const listItem = button.parentElement;
+        questionList.removeChild(listItem);
+    }
+</script>
+
+</body>
+</html>
